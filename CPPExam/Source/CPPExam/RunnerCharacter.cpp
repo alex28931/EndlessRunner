@@ -104,7 +104,7 @@ void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			impulse.Normalize();
 			impulse += GetActorUpVector();
 			impulse.Normalize();
-			impulse *= 1000.0f;
+			impulse *= 900.0f;
 			LaunchCharacter(impulse,true,true);
 			GetCapsuleComponent()->OnComponentBeginOverlap.RemoveDynamic(this, &ARunnerCharacter::OnOverlapBegin);
 			FTimerHandle TimerForRestartLevel;
