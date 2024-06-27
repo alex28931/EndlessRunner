@@ -74,13 +74,17 @@ void ARunnerCharacter::MoveRight(float value)
 
 void ARunnerCharacter::Death()
 {
-	GetMesh()->Deactivate();
-	GetMesh()->SetVisibility(false);
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll"),true);
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetAnimInstanceClass(nullptr);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	bCanMove = false;
 
 	FTimerHandle TimerForRestartLevel;
 	GetWorldTimerManager().SetTimer(TimerForRestartLevel, this, &ARunnerCharacter::RestartLevel, 2.0f, false);
+
 }
 
 void ARunnerCharacter::RestartLevel()
@@ -94,7 +98,17 @@ void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 	{
 		if (OtherActor->ActorHasTag(FName("Spike"))) 
 		{
-			Death();
+			FVector impulse = GetActorLocation() - OtherActor->GetActorLocation();
+			impulse.Z = 0.0f;
+			impulse.X = 0.0f;
+			impulse.Normalize();
+			impulse += GetActorUpVector();
+			impulse.Normalize();
+			impulse *= 1000.0f;
+			LaunchCharacter(impulse,true,true);
+			GetCapsuleComponent()->OnComponentBeginOverlap.RemoveDynamic(this, &ARunnerCharacter::OnOverlapBegin);
+			FTimerHandle TimerForRestartLevel;
+			GetWorldTimerManager().SetTimer(TimerForRestartLevel, this, &ARunnerCharacter::Death, 0.3f, false);
 		}
 	}
 }
