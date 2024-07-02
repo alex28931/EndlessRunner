@@ -7,15 +7,25 @@
 // Sets default values
 ALevelSpawnMngr::ALevelSpawnMngr()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void ALevelSpawnMngr::BeginPlay()
 {
 	Super::BeginPlay();
+	// Level Pooler Creation
+	for (TSubclassOf<ABaseLevel> level : levels) 
+	{
+		for (int i = 0; i < 3; i++)
+		{
+		ABaseLevel* poolLevel = GetWorld()->SpawnActor<ABaseLevel>(level, FVector(0,-200,0), spawnRotation);
+		levelPooler.Add(poolLevel);
+		poolLevel->SetActorHiddenInGame(true);
+		poolLevel->SetActorEnableCollision(false);
+		}
+	}
+	//Spawn first FourLevel
 	SpawnLevel(true);
 	SpawnLevel(false);
 	SpawnLevel(false);
@@ -32,24 +42,33 @@ void ALevelSpawnMngr::Tick(float DeltaTime)
 
 void ALevelSpawnMngr::SpawnLevel(bool bIsFirst)
 {
-	SpawnLocation = FVector(0.0f, 1000.0f, 0.0f);
-	SpawnRotation = FRotator(0.0f, 90.0f, 0.0f);
+	spawnLocation = FVector(0.0f, 1000.0f, 0.0f);
+	spawnRotation = FRotator(0.0f, 90.0f, 0.0f);
 	if (!bIsFirst)
 	{
-		ABaseLevel* LastLevel = RunTimeLevels.Last();
-		SpawnLocation = LastLevel->GetSpawnLocation()->GetComponentTransform().GetTranslation();
+		ABaseLevel* lastLevel = runTimeLevels.Last();
+		spawnLocation = lastLevel->GetSpawnLocation()->GetComponentTransform().GetTranslation();
 	}
-	RandomLevelToSpawn = FMath::RandRange(0, Levels.Num() - 1);
-	if (Levels[RandomLevelToSpawn]) 
+	randomLevelToSpawn = FMath::RandRange(0, levelPooler.Num() - 1);
+	if (levelPooler[randomLevelToSpawn]) 
 	{
-		ABaseLevel* LevelToSpawn = GetWorld()->SpawnActor<ABaseLevel>(Levels[RandomLevelToSpawn], SpawnLocation, SpawnRotation);
-		LevelToSpawn->GetTrigger()->OnComponentBeginOverlap.AddDynamic(this, &ALevelSpawnMngr::OnOverlapBegin);
-		RunTimeLevels.Add(LevelToSpawn);
-			if (RunTimeLevels.Num() > 10)
+		ABaseLevel* levelToSpawn = levelPooler[randomLevelToSpawn];
+		levelToSpawn->SetActorLocation(spawnLocation);
+		levelToSpawn->SetActorRotation(spawnRotation);
+		levelToSpawn->SetActorHiddenInGame(false);
+		levelToSpawn->SetActorEnableCollision(true);
+		levelToSpawn->GetTrigger()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		levelToSpawn->GetTrigger()->OnComponentBeginOverlap.AddDynamic(this, &ALevelSpawnMngr::OnOverlapBegin);
+		runTimeLevels.Add(levelToSpawn);
+		levelPooler.RemoveAt(randomLevelToSpawn);
+			if (runTimeLevels.Num() > 10)
 			{
-				ABaseLevel* LevelToDestroy = RunTimeLevels[0];
-				RunTimeLevels.RemoveAt(0);
-				LevelToDestroy->Destroy();
+				ABaseLevel* levelToDeactivate = runTimeLevels[0];
+				runTimeLevels.RemoveAt(0);
+				levelPooler.Add(levelToDeactivate);
+				levelToDeactivate->SetActorHiddenInGame(true);
+				levelToDeactivate->SetActorEnableCollision(false);
+				levelToDeactivate->GetTrigger()->OnComponentBeginOverlap.RemoveDynamic(this, &ALevelSpawnMngr::OnOverlapBegin);
 			}
 	}
 }
@@ -57,6 +76,6 @@ void ALevelSpawnMngr::SpawnLevel(bool bIsFirst)
 void ALevelSpawnMngr::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	SpawnLevel(false);
-	OverlappedComp->DestroyComponent();
+	OverlappedComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
