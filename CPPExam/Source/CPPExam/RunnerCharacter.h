@@ -30,6 +30,10 @@ public:
 
 	void RestartLevel();
 
+	bool LoadGame(FString SlotName, int32 UserIndex);
+
+	bool SaveGame(FString SlotName, int32 UserIndex);
+
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -49,4 +53,8 @@ private:
 	float zPosition;
 	bool bCanMove;
 
+public:
+
+	float TimeRecord;
+	float CurrentTime;
 };

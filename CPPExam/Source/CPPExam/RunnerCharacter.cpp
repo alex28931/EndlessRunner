@@ -3,6 +3,8 @@
 
 #include "RunnerCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "MySaveGame.h"
+#include <Kismet/GameplayStatics.h>
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Engine.h"
@@ -17,6 +19,7 @@ ARunnerCharacter::ARunnerCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	bCanMove = false;
 
 	SideViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Side View Camera"));
 	SideViewCamera->bUsePawnControlRotation = false;
@@ -31,6 +34,9 @@ ARunnerCharacter::ARunnerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 
+	CurrentTime = 0.0f;
+	TimeRecord = 0.0f;
+
 	tempPos = GetActorLocation();
 	zPosition = tempPos.Z + 300.0f;
 }
@@ -41,6 +47,7 @@ void ARunnerCharacter::BeginPlay()
 	Super::BeginPlay();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ARunnerCharacter::OnOverlapBegin);
 	bCanMove = true;
+	LoadGame("Slot1", 0);
 }
 
 // Called every frame
@@ -51,6 +58,7 @@ void ARunnerCharacter::Tick(float DeltaTime)
 	tempPos.X -= 850.0f;
 	tempPos.Z = zPosition;
 	SideViewCamera->SetWorldLocation(tempPos);
+	CurrentTime += DeltaTime;
 }
 
 // Called to bind functionality to input
@@ -82,6 +90,11 @@ void ARunnerCharacter::Death()
 
 	bCanMove = false;
 
+	if (CurrentTime > TimeRecord) 
+	{
+		SaveGame("Slot1", 0);
+	}
+
 	FTimerHandle TimerForRestartLevel;
 	GetWorldTimerManager().SetTimer(TimerForRestartLevel, this, &ARunnerCharacter::RestartLevel, 2.0f, false);
 
@@ -90,6 +103,33 @@ void ARunnerCharacter::Death()
 void ARunnerCharacter::RestartLevel()
 {
 	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()));
+}
+
+bool ARunnerCharacter::LoadGame(FString SlotName, int32 UserIndex)
+{
+	UMySaveGame* loadGame = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
+	if (loadGame) 
+	{
+		this->TimeRecord = loadGame->TimeRecord;
+		return true;
+	}
+	return false;
+}
+
+bool ARunnerCharacter::SaveGame(FString SlotName, int32 UserIndex)
+{
+	USaveGame* saveGame = UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass());
+	if (saveGame) 
+	{
+		UMySaveGame* MySaveGame = Cast<UMySaveGame>(saveGame);
+		if (MySaveGame) 
+		{
+			MySaveGame->TimeRecord = this->TimeRecord;
+			UGameplayStatics::SaveGameToSlot(MySaveGame, SlotName, UserIndex);
+			return true;
+		}
+	}
+	return false;
 }
 
 void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
