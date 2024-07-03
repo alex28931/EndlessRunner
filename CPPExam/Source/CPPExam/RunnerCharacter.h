@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
+#include "MyHUD.h"
 #include "RunnerCharacter.generated.h"
 
 UCLASS()
@@ -47,6 +48,10 @@ protected:
 	
 	void Death();
 
+	UPROPERTY(EditAnywhere, Category="Widget Type")
+	TSubclassOf<UUserWidget> widgetClass;
+	UMyHUD* myHud;
+
 private:
 
 	FVector tempPos = FVector();
@@ -54,8 +59,6 @@ private:
 	bool bCanMove;
 
 public:
-	UPROPERTY(BlueprintReadWrite)
 	float TimeRecord;
-	UPROPERTY(BlueprintReadWrite)
 	float CurrentTime;
 };

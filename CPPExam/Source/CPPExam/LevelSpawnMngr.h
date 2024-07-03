@@ -35,7 +35,7 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	TArray<TSubclassOf<ABaseLevel>> Levels;
+	TArray<TSubclassOf<ABaseLevel>> levels;
 
 	TArray<ABaseLevel*> levelPooler;
 

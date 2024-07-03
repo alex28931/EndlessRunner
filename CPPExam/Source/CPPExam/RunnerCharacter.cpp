@@ -48,6 +48,15 @@ void ARunnerCharacter::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ARunnerCharacter::OnOverlapBegin);
 	bCanMove = true;
 	LoadGame("Slot1", 0);
+	if (IsValid(widgetClass))
+	{
+		myHud = Cast<UMyHUD>(CreateWidget(this->GetWorld(), widgetClass));
+		if (myHud)
+		{
+			myHud->AddToViewport(2);
+		}
+	}
+	myHud->SetRecordTime(TimeRecord);
 }
 
 // Called every frame
@@ -59,6 +68,7 @@ void ARunnerCharacter::Tick(float DeltaTime)
 	tempPos.Z = zPosition;
 	SideViewCamera->SetWorldLocation(tempPos);
 	CurrentTime += DeltaTime;
+	myHud->SetCurrentTime(CurrentTime);
 }
 
 // Called to bind functionality to input
@@ -93,6 +103,7 @@ void ARunnerCharacter::Death()
 	if (CurrentTime > TimeRecord) 
 	{
 		TimeRecord = CurrentTime;
+		myHud->SetRecordTime(TimeRecord);
 		SaveGame("Slot1", 0);
 	}
 

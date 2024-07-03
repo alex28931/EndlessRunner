@@ -15,7 +15,7 @@ void ALevelSpawnMngr::BeginPlay()
 {
 	Super::BeginPlay();
 	// Level Pooler Creation
-	for (TSubclassOf<ABaseLevel> level : Levels) 
+	for (TSubclassOf<ABaseLevel> level : levels) 
 	{
 		for (int i = 0; i < 3; i++)
 		{
