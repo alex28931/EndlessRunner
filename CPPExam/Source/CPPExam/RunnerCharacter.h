@@ -54,7 +54,8 @@ private:
 	bool bCanMove;
 
 public:
-
+	UPROPERTY(BlueprintReadWrite)
 	float TimeRecord;
+	UPROPERTY(BlueprintReadWrite)
 	float CurrentTime;
 };

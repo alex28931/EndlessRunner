@@ -92,6 +92,7 @@ void ARunnerCharacter::Death()
 
 	if (CurrentTime > TimeRecord) 
 	{
+		TimeRecord = CurrentTime;
 		SaveGame("Slot1", 0);
 	}
 
