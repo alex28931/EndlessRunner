@@ -49,13 +49,13 @@ protected:
 	void Death();
 
 	UPROPERTY(EditAnywhere, Category="Widget Type")
-	TSubclassOf<UUserWidget> widgetClass;
-	UMyHUD* myHud;
+	TSubclassOf<UUserWidget> WidgetClass;
+	UMyHUD* MyHud;
 
 private:
 
-	FVector tempPos = FVector();
-	float zPosition;
+	FVector TempPos = FVector();
+	float ZPosition;
 	bool bCanMove;
 
 public:

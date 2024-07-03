@@ -35,15 +35,15 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	TArray<TSubclassOf<ABaseLevel>> levels;
+	TArray<TSubclassOf<ABaseLevel>> Levels;
 
-	TArray<ABaseLevel*> levelPooler;
+	TArray<ABaseLevel*> LevelPooler;
 
-	TArray<ABaseLevel*> runTimeLevels;
+	TArray<ABaseLevel*> RunTimeLevels;
 	
-	int randomLevelToSpawn;
+	int32 RandomLevelToSpawn;
 
-	FVector spawnLocation = FVector();
-	FRotator spawnRotation = FRotator();
-	FActorSpawnParameters spawnInfo = FActorSpawnParameters();
+	FVector SpawnLocation = FVector();
+	FRotator SpawnRotation = FRotator();
+	FActorSpawnParameters SpawnInfo = FActorSpawnParameters();
 };

@@ -37,8 +37,8 @@ ARunnerCharacter::ARunnerCharacter()
 	CurrentTime = 0.0f;
 	TimeRecord = 0.0f;
 
-	tempPos = GetActorLocation();
-	zPosition = tempPos.Z + 300.0f;
+	TempPos = GetActorLocation();
+	ZPosition = TempPos.Z + 300.0f;
 }
 
 
@@ -48,27 +48,27 @@ void ARunnerCharacter::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ARunnerCharacter::OnOverlapBegin);
 	bCanMove = true;
 	LoadGame("Slot1", 0);
-	if (IsValid(widgetClass))
+	if (IsValid(WidgetClass))
 	{
-		myHud = Cast<UMyHUD>(CreateWidget(this->GetWorld(), widgetClass));
-		if (myHud)
+		MyHud = Cast<UMyHUD>(CreateWidget(this->GetWorld(), WidgetClass));
+		if (MyHud)
 		{
-			myHud->AddToViewport(2);
+			MyHud->AddToViewport(2);
 		}
 	}
-	myHud->SetRecordTime(TimeRecord);
+	MyHud->SetRecordTime(TimeRecord);
 }
 
 // Called every frame
 void ARunnerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	tempPos = GetActorLocation();
-	tempPos.X -= 850.0f;
-	tempPos.Z = zPosition;
-	SideViewCamera->SetWorldLocation(tempPos);
+	TempPos = GetActorLocation();
+	TempPos.X -= 850.0f;
+	TempPos.Z = ZPosition;
+	SideViewCamera->SetWorldLocation(TempPos);
 	CurrentTime += DeltaTime;
-	myHud->SetCurrentTime(CurrentTime);
+	MyHud->SetCurrentTime(CurrentTime);
 }
 
 // Called to bind functionality to input
@@ -82,11 +82,11 @@ void ARunnerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARunnerCharacter::MoveRight);
 }
 
-void ARunnerCharacter::MoveRight(float value)
+void ARunnerCharacter::MoveRight(float Value)
 {
 	if (bCanMove) 
 	{
-		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), value);
+		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 	}
 }
 
@@ -103,7 +103,7 @@ void ARunnerCharacter::Death()
 	if (CurrentTime > TimeRecord) 
 	{
 		TimeRecord = CurrentTime;
-		myHud->SetRecordTime(TimeRecord);
+		MyHud->SetRecordTime(TimeRecord);
 		SaveGame("Slot1", 0);
 	}
 
@@ -119,10 +119,10 @@ void ARunnerCharacter::RestartLevel()
 
 bool ARunnerCharacter::LoadGame(FString SlotName, int32 UserIndex)
 {
-	UMySaveGame* loadGame = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
-	if (loadGame) 
+	UMySaveGame* LoadGame = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
+	if (LoadGame) 
 	{
-		this->TimeRecord = loadGame->TimeRecord;
+		this->TimeRecord = LoadGame->TimeRecord;
 		return true;
 	}
 	return false;
@@ -130,10 +130,10 @@ bool ARunnerCharacter::LoadGame(FString SlotName, int32 UserIndex)
 
 bool ARunnerCharacter::SaveGame(FString SlotName, int32 UserIndex)
 {
-	USaveGame* saveGame = UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass());
-	if (saveGame) 
+	USaveGame* SaveGame = UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass());
+	if (SaveGame) 
 	{
-		UMySaveGame* MySaveGame = Cast<UMySaveGame>(saveGame);
+		UMySaveGame* MySaveGame = Cast<UMySaveGame>(SaveGame);
 		if (MySaveGame) 
 		{
 			MySaveGame->TimeRecord = this->TimeRecord;
