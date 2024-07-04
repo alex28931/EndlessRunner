@@ -17,5 +17,5 @@ void ASpikeWall::BeginPlay()
 void ASpikeWall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SetActorLocation(GetActorLocation() + FVector(0, 450 * DeltaTime, 0), true);
+	SetActorLocation(GetActorLocation() + FVector(0, 0 * DeltaTime, 0), true);
 }

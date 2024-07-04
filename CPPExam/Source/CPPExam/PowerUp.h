@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
-#include "BaseLevel.generated.h"
+#include "PowerUp.generated.h"
 
 UCLASS()
-class CPPEXAM_API ABaseLevel : public AActor
+class CPPEXAM_API APowerUp : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABaseLevel();
+	APowerUp();
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,13 +29,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "My Triggers")
 	UBoxComponent* Trigger;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "My Triggers")
-	UBoxComponent* SpawnLoacation;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "My Triggers")
-	UBoxComponent* PowerUpSpawnLoacation;
-
 public:
 	UBoxComponent* GetTrigger();
-	UBoxComponent* GetSpawnLocation();
 };

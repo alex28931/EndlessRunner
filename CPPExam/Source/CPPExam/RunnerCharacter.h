@@ -48,6 +48,8 @@ protected:
 	
 	void Death();
 
+	void ResetVelocity();
+
 	UPROPERTY(EditAnywhere, Category="Widget Type")
 	TSubclassOf<UUserWidget> WidgetClass;
 	UMyHUD* MyHud;
@@ -57,6 +59,7 @@ private:
 	FVector TempPos = FVector();
 	float ZPosition;
 	bool bCanMove;
+	FTimerHandle TimerForResetVelocity;
 
 public:
 	float TimeRecord;

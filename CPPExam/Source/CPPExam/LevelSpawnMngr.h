@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseLevel.h"
+#include "PowerUp.h"
 #include "GameFramework/Actor.h"
 #include "LevelSpawnMngr.generated.h"
 
@@ -37,9 +38,16 @@ protected:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TArray<TSubclassOf<ABaseLevel>> Levels;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<TSubclassOf<APowerUp>> PowerUps;
+
 	TArray<ABaseLevel*> LevelPooler;
 
+	TArray<APowerUp*> PowerUpPooler;
+
 	TArray<ABaseLevel*> RunTimeLevels;
+
+	TArray<APowerUp*> RunTimePowerUp;
 	
 	int32 RandomLevelToSpawn;
 

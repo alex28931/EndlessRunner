@@ -112,6 +112,11 @@ void ARunnerCharacter::Death()
 
 }
 
+void ARunnerCharacter::ResetVelocity()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
 void ARunnerCharacter::RestartLevel()
 {
 	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()));
@@ -161,6 +166,12 @@ void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			GetCapsuleComponent()->OnComponentBeginOverlap.RemoveDynamic(this, &ARunnerCharacter::OnOverlapBegin);
 			FTimerHandle TimerForRestartLevel;
 			GetWorldTimerManager().SetTimer(TimerForRestartLevel, this, &ARunnerCharacter::Death, 0.3f, false);
+		}
+		if (OtherActor->ActorHasTag(FName("PowerUp"))) 
+		{
+			GetWorldTimerManager().ClearTimer(TimerForResetVelocity);
+			GetCharacterMovement()->MaxWalkSpeed = 800;
+			GetWorldTimerManager().SetTimer(TimerForResetVelocity, this, &ARunnerCharacter::ResetVelocity, 3, false);
 		}
 	}
 }

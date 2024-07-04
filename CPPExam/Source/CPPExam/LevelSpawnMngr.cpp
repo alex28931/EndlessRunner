@@ -19,10 +19,20 @@ void ALevelSpawnMngr::BeginPlay()
 	{
 		for (int i = 0; i < 3; i++)
 		{
-		ABaseLevel* PoolLevel = GetWorld()->SpawnActor<ABaseLevel>(Level, FVector(0,-200,0), SpawnRotation);
+		ABaseLevel* PoolLevel = GetWorld()->SpawnActor<ABaseLevel>(Level, FVector(0,-2000,0), SpawnRotation);
 		LevelPooler.Add(PoolLevel);
 		PoolLevel->SetActorHiddenInGame(true);
 		PoolLevel->SetActorEnableCollision(false);
+		}
+	}
+	for (TSubclassOf<APowerUp> PowerUp : PowerUps)
+	{
+		for (int i = 0; i < 30; i++)
+		{
+			APowerUp* PoolPowerUp = GetWorld()->SpawnActor<APowerUp>(PowerUp, FVector(0, -200, 0), SpawnRotation);
+			PowerUpPooler.Add(PoolPowerUp);
+			PoolPowerUp->SetActorHiddenInGame(true);
+			PoolPowerUp->SetActorEnableCollision(false);
 		}
 	}
 	//Spawn first FourLevel
