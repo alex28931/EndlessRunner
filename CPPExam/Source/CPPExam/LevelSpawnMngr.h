@@ -47,7 +47,7 @@ protected:
 
 	TArray<ABaseLevel*> RunTimeLevels;
 
-	TArray<APowerUp*> RunTimePowerUp;
+	TArray<APowerUp*> RunTimePowerUps;
 	
 	int32 RandomLevelToSpawn;
 

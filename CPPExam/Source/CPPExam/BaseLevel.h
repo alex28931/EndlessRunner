@@ -38,4 +38,5 @@ protected:
 public:
 	UBoxComponent* GetTrigger();
 	UBoxComponent* GetSpawnLocation();
+	UBoxComponent* GetPowerupSpawnLocation();
 };

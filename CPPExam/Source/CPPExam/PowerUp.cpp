@@ -15,7 +15,7 @@ APowerUp::APowerUp()
 void APowerUp::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Trigger->OnComponentBeginOverlap.AddDynamic(this, &APowerUp::OnOverlapBegin);
 }
 
 // Called every frame
@@ -28,5 +28,12 @@ void APowerUp::Tick(float DeltaTime)
 UBoxComponent* APowerUp::GetTrigger()
 {
 	return Trigger;
+}
+
+void APowerUp::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	Trigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

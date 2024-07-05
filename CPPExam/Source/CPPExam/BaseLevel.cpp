@@ -34,3 +34,8 @@ UBoxComponent* ABaseLevel::GetSpawnLocation()
 	return SpawnLoacation;
 }
 
+UBoxComponent* ABaseLevel::GetPowerupSpawnLocation()
+{
+	return PowerUpSpawnLoacation;
+}
+

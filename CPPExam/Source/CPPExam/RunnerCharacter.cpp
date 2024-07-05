@@ -115,6 +115,7 @@ void ARunnerCharacter::Death()
 void ARunnerCharacter::ResetVelocity()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 }
 
 void ARunnerCharacter::RestartLevel()
@@ -170,7 +171,8 @@ void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 		if (OtherActor->ActorHasTag(FName("PowerUp"))) 
 		{
 			GetWorldTimerManager().ClearTimer(TimerForResetVelocity);
-			GetCharacterMovement()->MaxWalkSpeed = 800;
+			GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+			GetCharacterMovement()->MaxFlySpeed = 800.0f;
 			GetWorldTimerManager().SetTimer(TimerForResetVelocity, this, &ARunnerCharacter::ResetVelocity, 3, false);
 		}
 	}
