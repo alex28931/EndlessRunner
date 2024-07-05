@@ -60,7 +60,7 @@ void ALevelSpawnMngr::SpawnLevel(bool bIsFirst)
 		ABaseLevel* LastLevel = RunTimeLevels.Last();
 		SpawnLocation = LastLevel->GetSpawnLocation()->GetComponentTransform().GetTranslation();
 	}
-	RandomLevelToSpawn = FMath::RandRange(0, LevelPooler.Num() - 1);
+	int32 RandomLevelToSpawn = FMath::RandRange(0, LevelPooler.Num() - 1);
 	if (LevelPooler[RandomLevelToSpawn])
 	{
 		ABaseLevel* LevelToSpawn = LevelPooler[RandomLevelToSpawn];
@@ -81,32 +81,36 @@ void ALevelSpawnMngr::SpawnLevel(bool bIsFirst)
 			LevelToDeactivate->SetActorEnableCollision(false);
 			LevelToDeactivate->GetTrigger()->OnComponentBeginOverlap.RemoveDynamic(this, &ALevelSpawnMngr::OnOverlapBegin);
 		}
-		int32 RandomForSpawnPowerup = FMath::RandRange(1, 10);
-		if (RandomForSpawnPowerup == 1)
+		TryToSpawnRandomPowerUp(LevelToSpawn->GetPowerupSpawnLocation()->GetComponentTransform().GetTranslation());
+	}
+}
+
+void ALevelSpawnMngr::TryToSpawnRandomPowerUp(FVector SpawnPosition)
+{
+	int32 RandomForSpawnPowerup = FMath::RandRange(1, 10);
+	if (RandomForSpawnPowerup == 1)
+	{
+		//FVector PowerUpSpawnPosition = LevelToSpawn->GetPowerupSpawnLocation()->GetComponentTransform().GetTranslation();
+		int32 RandomPowerUpToSpawn = FMath::RandRange(0, PowerUpPooler.Num() - 1);
+		if (PowerUpPooler[RandomPowerUpToSpawn])
 		{
-			FVector PowerUpSpawnPosition = LevelToSpawn->GetPowerupSpawnLocation()->GetComponentTransform().GetTranslation();
-			int32 RandomPowerUpToSpawn = FMath::RandRange(0, PowerUpPooler.Num() - 1);
-			if (PowerUpPooler[RandomPowerUpToSpawn])
+			APowerUp* PowerUpToSpawn = PowerUpPooler[RandomPowerUpToSpawn];
+			PowerUpToSpawn->SetActorLocation(SpawnPosition);
+			PowerUpToSpawn->SetActorHiddenInGame(false);
+			PowerUpToSpawn->SetActorEnableCollision(true);
+			PowerUpToSpawn->GetTrigger()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			RunTimePowerUps.Add(PowerUpToSpawn);
+			PowerUpPooler.RemoveAt(RandomPowerUpToSpawn);
+			if (RunTimePowerUps.Num() > 10)
 			{
-				APowerUp* PowerUpToSpawn = PowerUpPooler[RandomPowerUpToSpawn];
-				PowerUpToSpawn->SetActorLocation(PowerUpSpawnPosition);
-				PowerUpToSpawn->SetActorHiddenInGame(false);
-				PowerUpToSpawn->SetActorEnableCollision(true);
-				PowerUpToSpawn->GetTrigger()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-				RunTimePowerUps.Add(PowerUpToSpawn);
-				PowerUpPooler.RemoveAt(RandomPowerUpToSpawn);
-				if (RunTimePowerUps.Num() > 10)
-				{
-					APowerUp* PowerUpToDeactivate = RunTimePowerUps[0];
-					RunTimeLevels.RemoveAt(0);
-					PowerUpPooler.Add(PowerUpToDeactivate);
-					PowerUpToDeactivate->SetActorHiddenInGame(true);
-					PowerUpToDeactivate->SetActorEnableCollision(false);
-					PowerUpToDeactivate->GetTrigger()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				}
+				APowerUp* PowerUpToDeactivate = RunTimePowerUps[0];
+				RunTimeLevels.RemoveAt(0);
+				PowerUpPooler.Add(PowerUpToDeactivate);
+				PowerUpToDeactivate->SetActorHiddenInGame(true);
+				PowerUpToDeactivate->SetActorEnableCollision(false);
+				PowerUpToDeactivate->GetTrigger()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			}
 		}
-
 	}
 }
 

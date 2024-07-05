@@ -28,6 +28,8 @@ public:
 	UFUNCTION()
 	void SpawnLevel(bool bIsFirst);
 
+	void TryToSpawnRandomPowerUp(FVector SpawnPosition);
+
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -48,8 +50,6 @@ protected:
 	TArray<ABaseLevel*> RunTimeLevels;
 
 	TArray<APowerUp*> RunTimePowerUps;
-	
-	int32 RandomLevelToSpawn;
 
 	FVector SpawnLocation = FVector();
 	FRotator SpawnRotation = FRotator();
