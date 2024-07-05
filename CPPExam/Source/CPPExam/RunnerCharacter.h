@@ -15,6 +15,12 @@ class CPPEXAM_API ARunnerCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* SideViewCamera;
+	UPROPERTY(EditAnywhere,Category="Materials")
+	UMaterialInterface* DefaultMaterialZero;
+	UPROPERTY(EditAnywhere, Category = "Materials")
+	UMaterialInterface* DefaultMaterialOne;
+	UPROPERTY(EditAnywhere, Category = "Materials")
+	UMaterialInterface* PowerUpMaterial;
 
 public:
 
@@ -48,7 +54,7 @@ protected:
 	
 	void Death();
 
-	void ResetVelocity();
+	void ResetAbilities();
 
 	UPROPERTY(EditAnywhere, Category="Widget Type")
 	TSubclassOf<UUserWidget> WidgetClass;

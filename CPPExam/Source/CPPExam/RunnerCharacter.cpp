@@ -34,6 +34,10 @@ ARunnerCharacter::ARunnerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 
+	DefaultMaterialZero = CreateDefaultSubobject<UMaterialInterface>("DefaultMaterialZero");
+	DefaultMaterialOne = CreateDefaultSubobject<UMaterialInterface>("DefaultMaterialOne");
+	PowerUpMaterial = CreateDefaultSubobject<UMaterialInterface>("PowerUpMaterial");
+
 	CurrentTime = 0.0f;
 	TimeRecord = 0.0f;
 
@@ -112,10 +116,12 @@ void ARunnerCharacter::Death()
 
 }
 
-void ARunnerCharacter::ResetVelocity()
+void ARunnerCharacter::ResetAbilities()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
+	GetMesh()->SetMaterial(0, DefaultMaterialZero);
+	GetMesh()->SetMaterial(1, DefaultMaterialOne);
 }
 
 void ARunnerCharacter::RestartLevel()
@@ -173,7 +179,9 @@ void ARunnerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			GetWorldTimerManager().ClearTimer(TimerForResetVelocity);
 			GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 			GetCharacterMovement()->MaxFlySpeed = 800.0f;
-			GetWorldTimerManager().SetTimer(TimerForResetVelocity, this, &ARunnerCharacter::ResetVelocity, 3, false);
+			GetMesh()->SetMaterial(0, PowerUpMaterial);
+			GetMesh()->SetMaterial(1, PowerUpMaterial);
+			GetWorldTimerManager().SetTimer(TimerForResetVelocity, this, &ARunnerCharacter::ResetAbilities, 3, false);
 		}
 	}
 }
