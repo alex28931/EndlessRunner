@@ -36,5 +36,4 @@ A fast-paced endless runner game developed in Unreal Engine using C++. The playe
 
 ## 🎞️ Gameplay Preview
 
-### 🔥 Wall Chase & Power-Up Sequence  
 ![Gameplay Preview](Gifs/Gameplay.gif)
