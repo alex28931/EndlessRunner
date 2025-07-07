@@ -1,15 +1,35 @@
-# CPPExamAlessandroCaccamo
- 
-Nome: Alessandro 
-Cognome: Caccamo
+# 🏃 Endless Runner – Unreal Engine (C++)
 
-Descrizione:
-Il mio esame di c++ consiste in un endless Runner;
-Gli ostacoli e i powerUp(Che aumentano la velocità) sono gestiti con delle pool per evitare che vengano istanziati a runtime
-Inoltre, ho implementato un sistemino di salvataggio per salvare il tempo record mostrato in una UI in alto a sinistra;
-il Giocatore sarà inseguito da un Muro pieno di spuntoni che al passare del tempo diventerà sempre più veloce.
+A fast-paced endless runner game developed in Unreal Engine using C++. The player must dodge obstacles and collect power-ups while being chased by a deadly spiked wall that accelerates over time.
 
-Comandi:
-A: novimento verso sinistra
-D: Movimento Verso destra
-Barra spaziatrice: Salto
+## 🎮 Gameplay Overview
+
+- **Object Pooling for Obstacles & Power-Ups**  
+  Obstacles and speed-boosting power-ups are managed through object pooling to optimize performance and avoid runtime instantiation.
+
+- **Dynamic Difficulty Scaling**  
+  A spiked wall relentlessly pursues the player, increasing its speed over time to raise the challenge.
+
+- **Record Saving System**  
+  The game tracks and saves the best survival time locally, displaying it via a UI element in the top-left corner of the screen.
+
+## 🕹️ Controls
+
+- **A** → Move Left  
+- **D** → Move Right  
+- **Spacebar** → Jump
+
+## 🛠️ Technologies Used
+
+- **Unreal Engine**
+- **C++**
+- **Object Pooling**
+- **SaveGame System**
+- **Custom UI Widgets**
+
+## 🎯 Development Focus
+
+- Efficient memory and object management using pooling  
+- Real-time difficulty progression  
+- Persistent data handling with Unreal’s SaveGame system  
+- Responsive input and UI integration
