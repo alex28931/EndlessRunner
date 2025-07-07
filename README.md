@@ -33,3 +33,8 @@ A fast-paced endless runner game developed in Unreal Engine using C++. The playe
 - Real-time difficulty progression  
 - Persistent data handling with Unreal’s SaveGame system  
 - Responsive input and UI integration
+
+## 🎞️ Gameplay Preview
+
+### 🔥 Wall Chase & Power-Up Sequence  
+![Gameplay Preview](Gifs/Gameplay.gif)
